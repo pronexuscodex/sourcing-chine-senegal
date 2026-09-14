@@ -5,10 +5,8 @@ import { ConfigService } from '@nestjs/config';
 import type { StorageProvider } from './storage-provider.interface';
 
 /**
- * NON VÉRIFIÉ EN CONDITIONS RÉELLES — aucun bucket R2/S3 réel disponible pendant
- * le développement. L'API S3 est standardisée et R2 s'y conforme, mais valider
- * contre un vrai bucket avant mise en production (ARCHITECTURE.md §20, décision
- * "Hébergement" — Cloudflare R2).
+ * Vérifié contre un vrai bucket Cloudflare R2 (PUT/GET/DELETE) avant le premier
+ * déploiement en production (ARCHITECTURE.md §20, décision "Hébergement" — R2).
  */
 export class S3StorageProvider implements StorageProvider {
   readonly name = 'S3';
