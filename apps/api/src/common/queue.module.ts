@@ -14,7 +14,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
           connection: {
             host: url.hostname,
             port: Number(url.port || 6379),
+            username: url.username || undefined,
             password: url.password || undefined,
+            // rediss:// (ex: Upstash) exige TLS — redis:// (ex: local dev) n'en a pas besoin.
+            tls: url.protocol === 'rediss:' ? {} : undefined,
           },
         };
       },
