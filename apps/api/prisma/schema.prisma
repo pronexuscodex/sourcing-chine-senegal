@@ -1,0 +1,389 @@
+// Modèle de données — voir ARCHITECTURE.md §5 pour l'ERD et les décisions de design.
+// Conventions : id UUID, createdAt/updatedAt partout, soft delete via deletedAt
+// sur les entités à valeur légale/métier, montants en entier (plus petite unité monétaire).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// --- RBAC ---------------------------------------------------------------
+
+model Role {
+  id          String           @id @default(uuid())
+  name        String           @unique // CUSTOMER, SUPPORT_AGENT, ... (ARCHITECTURE.md §8)
+  users       User[]
+  permissions RolePermission[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+model Permission {
+  id        String           @id @default(uuid())
+  key       String           @unique // ex: "orders:read:all"
+  roles     RolePermission[]
+  createdAt DateTime         @default(now())
+}
+
+model RolePermission {
+  roleId       String
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permissionId String
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+}
+
+// --- Identité -------------------------------------------------------------
+
+model User {
+  id               String            @id @default(uuid())
+  email            String?           @unique
+  phone            String?           @unique
+  passwordHash     String
+  roleId           String
+  role             Role              @relation(fields: [roleId], references: [id])
+  mfaEnabled       Boolean           @default(false)
+  mfaSecret        String?
+  status           String            @default("ACTIVE") // ACTIVE, SUSPENDED, PENDING_VERIFICATION
+  customerProfile  CustomerProfile?
+  notifications    Notification[]
+  auditLogs        AuditLog[]        @relation("AuditActor")
+  supportTickets   SupportTicket[]
+  refreshTokens    RefreshToken[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  deletedAt        DateTime?
+}
+
+model SequenceCounter {
+  key   String @id // ex: "REQ:2026" — un compteur atomique par préfixe+année
+  value Int    @default(0)
+}
+
+model RefreshToken {
+  id         String    @id @default(uuid()) // = jti embedded in the signed refresh JWT
+  userId     String
+  user       User      @relation(fields: [userId], references: [id])
+  expiresAt  DateTime
+  revokedAt  DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([userId])
+}
+
+model CustomerProfile {
+  id                  String            @id @default(uuid())
+  userId              String            @unique
+  user                User              @relation(fields: [userId], references: [id])
+  firstName           String
+  lastName             String
+  companyName         String?
+  preferredLanguage   String            @default("fr")
+  addresses           Address[]
+  sourcingRequests    SourcingRequest[]
+  orders              Order[]
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+}
+
+model Address {
+  id         String          @id @default(uuid())
+  customerId String
+  customer   CustomerProfile @relation(fields: [customerId], references: [id])
+  label      String? // "Domicile", "Bureau", ...
+  line1      String
+  line2      String?
+  city       String
+  region     String?
+  country    String          @default("SN")
+  phone      String?
+  deliveries Delivery[]
+  createdAt  DateTime        @default(now())
+}
+
+// --- Sourcing ---------------------------------------------------------------
+
+model SourcingRequest {
+  id          String        @id @default(uuid())
+  code        String        @unique // REQ-2026-000001
+  customerId  String
+  customer    CustomerProfile @relation(fields: [customerId], references: [id])
+  status      String        @default("RECEIVED") // RECEIVED, IN_ANALYSIS, QUOTED, CLOSED
+  destination String
+  items       RequestItem[]
+  quotes      Quote[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model RequestItem {
+  id               String        @id @default(uuid())
+  requestId        String
+  request          SourcingRequest @relation(fields: [requestId], references: [id])
+  productLink      String?
+  photoDocumentId  String?
+  description      String?
+  quantity         Int
+  color            String?
+  size             String?
+  variants         Json?
+  budgetAmount     Int?
+  budgetCurrency   String        @default("XOF")
+  comments         String?
+  quoteItems       QuoteItem[]
+  createdAt        DateTime      @default(now())
+}
+
+// --- Fournisseurs -----------------------------------------------------------
+
+model Supplier {
+  id             String               @id @default(uuid())
+  name           String
+  contact        String?
+  platform       String? // ALIBABA, 1688, OTHER
+  moq            Int?
+  notes          String?
+  computedScore  Float? // moyenne des SupplierEvaluation.computedScore, recalculée à chaque nouvelle évaluation
+  evaluations    SupplierEvaluation[]
+  quoteItems     QuoteItem[]
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+}
+
+model SupplierEvaluation {
+  id             String   @id @default(uuid())
+  supplierId     String
+  supplier       Supplier @relation(fields: [supplierId], references: [id])
+  evaluatedById  String
+  priceScore     Int
+  qualityScore   Int
+  delayScore     Int
+  reactivityScore Int
+  issueRate      Float
+  computedScore  Float
+  createdAt      DateTime @default(now())
+}
+
+// --- Devis --------------------------------------------------------------
+
+model Quote {
+  id           String      @id @default(uuid())
+  code         String      @unique // QUOTE-2026-000001
+  requestId    String
+  request      SourcingRequest @relation(fields: [requestId], references: [id])
+  status       String      @default("DRAFT") // DRAFT, SENT, ACCEPTED, REJECTED, EXPIRED
+  currency     String      @default("XOF")
+  exchangeRateUsed Float
+  validUntil   DateTime
+  createdBy    String
+  items        QuoteItem[]
+  order        Order?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+model QuoteItem {
+  id                    String       @id @default(uuid())
+  quoteId               String
+  quote                 Quote        @relation(fields: [quoteId], references: [id])
+  requestItemId         String
+  requestItem           RequestItem  @relation(fields: [requestItemId], references: [id])
+  supplierId            String?
+  supplier              Supplier?    @relation(fields: [supplierId], references: [id])
+  productCost           Int
+  chinaInlandShipping   Int
+  supplierFees          Int          @default(0)
+  qualityControlFee     Int          @default(0)
+  consolidationFee      Int          @default(0)
+  internationalFreight  Int
+  otherCosts            Int          @default(0)
+  serviceFee            Int
+  realCost              Int // interne — jamais exposé au client
+  clientPrice           Int
+  margin                Int // interne — jamais exposé au client
+  orderItem             OrderItem?
+  createdAt             DateTime     @default(now())
+}
+
+// --- Commandes ------------------------------------------------------------
+
+model Order {
+  id          String      @id @default(uuid())
+  code        String      @unique // ORD-2026-000001
+  quoteId     String      @unique
+  quote       Quote       @relation(fields: [quoteId], references: [id])
+  customerId  String
+  customer    CustomerProfile @relation(fields: [customerId], references: [id])
+  status      String      @default("QUOTE_PENDING") // voir ARCHITECTURE.md §7
+  totalAmount Int
+  currency    String      @default("XOF")
+  items       OrderItem[]
+  payments    Payment[]
+  packages    WarehousePackage[]
+  delivery    Delivery?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  deletedAt   DateTime?
+}
+
+model OrderItem {
+  id          String    @id @default(uuid())
+  orderId     String
+  order       Order     @relation(fields: [orderId], references: [id])
+  quoteItemId String    @unique
+  quoteItem   QuoteItem @relation(fields: [quoteItemId], references: [id])
+  createdAt   DateTime  @default(now())
+}
+
+// --- Paiements --------------------------------------------------------------
+
+model Payment {
+  id           String               @id @default(uuid())
+  orderId      String
+  order        Order                @relation(fields: [orderId], references: [id])
+  amountDue    Int
+  amountPaid   Int                  @default(0)
+  status       String               @default("PENDING") // PENDING, PARTIALLY_PAID, PAID, REFUNDED, FAILED
+  provider     String // ex: CINETPAY
+  transactions PaymentTransaction[]
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+}
+
+model PaymentTransaction {
+  id                    String   @id @default(uuid())
+  paymentId             String
+  payment               Payment  @relation(fields: [paymentId], references: [id])
+  providerTransactionId String   @unique // clé d'idempotence
+  amount                Int
+  status                String
+  rawWebhookPayload     Json?
+  receivedAt            DateTime @default(now())
+}
+
+// --- Logistique Chine ---------------------------------------------------
+
+model WarehousePackage {
+  id           String              @id @default(uuid())
+  code         String              @unique // PKG-2026-000321
+  orderId      String
+  order        Order               @relation(fields: [orderId], references: [id])
+  status       String              @default("RECEIVED")
+  photos       String[]
+  shipmentId   String?
+  shipment     Shipment?           @relation(fields: [shipmentId], references: [id])
+  inspections  QualityInspection[]
+  receivedAt   DateTime            @default(now())
+}
+
+model QualityInspection {
+  id                String           @id @default(uuid())
+  packageId         String
+  package           WarehousePackage @relation(fields: [packageId], references: [id])
+  inspectedById     String
+  quantityVerified  Boolean          @default(false)
+  variantVerified   Boolean          @default(false)
+  issueReported     Boolean          @default(false)
+  notes             String?
+  mediaDocumentIds  String[]
+  createdAt         DateTime         @default(now())
+}
+
+model Shipment {
+  id         String             @id @default(uuid())
+  code       String             @unique
+  status     String             @default("PREPARING")
+  packages   WarehousePackage[]
+  events     ShipmentEvent[]
+  departedAt DateTime?
+  arrivedAt  DateTime?
+  createdAt  DateTime           @default(now())
+}
+
+model ShipmentEvent {
+  id          String   @id @default(uuid())
+  shipmentId  String
+  shipment    Shipment @relation(fields: [shipmentId], references: [id])
+  type        String
+  description String
+  occurredAt  DateTime @default(now())
+}
+
+model Delivery {
+  id          String   @id @default(uuid())
+  orderId     String   @unique
+  order       Order    @relation(fields: [orderId], references: [id])
+  addressId   String
+  address     Address  @relation(fields: [addressId], references: [id])
+  status      String   @default("PENDING")
+  deliveredAt DateTime?
+  createdAt   DateTime @default(now())
+}
+
+// --- Documents, notifications, support, audit ------------------------------
+
+model Document {
+  id                  String    @id @default(uuid())
+  ownerType           String // ORDER, QUOTE, PAYMENT, INSPECTION, REQUEST_ITEM
+  ownerId             String
+  storageKey          String
+  mimeType            String
+  visibility          String    @default("INTERNAL") // INTERNAL, CUSTOMER
+  createdAt           DateTime  @default(now())
+
+  @@index([ownerType, ownerId])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  channel   String // WHATSAPP, EMAIL, PUSH, SMS
+  eventType String
+  payload   Json
+  status    String   @default("PENDING")
+  sentAt    DateTime?
+  createdAt DateTime @default(now())
+}
+
+model SupportTicket {
+  id        String           @id @default(uuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id])
+  orderId   String?
+  subject   String
+  status    String           @default("OPEN") // OPEN, PENDING, RESOLVED, CLOSED
+  messages  SupportMessage[]
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+}
+
+model SupportMessage {
+  id        String        @id @default(uuid())
+  ticketId  String
+  ticket    SupportTicket @relation(fields: [ticketId], references: [id])
+  authorId  String
+  body      String
+  createdAt DateTime      @default(now())
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  actorId    String
+  actor      User     @relation("AuditActor", fields: [actorId], references: [id])
+  action     String
+  entityType String
+  entityId   String
+  before     Json?
+  after      Json?
+  ip         String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  @@index([entityType, entityId])
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {
+      "dependsOn": ["^build"]
+    },
+    "typecheck": {
+      // Next.js writes .next/types/**/*.ts during its own `build` and this package's
+      // tsconfig includes that glob — without depending on this package's OWN build
+      // (not just ^build of its dependencies), a concurrent `turbo run build typecheck`
+      // races Next's type generation and fails non-deterministically.
+      "dependsOn": ["^build", "build"]
+    },
+    "test": {
+      "dependsOn": ["^build"]
+    }
+  }
+}
