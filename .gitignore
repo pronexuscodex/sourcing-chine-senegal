@@ -33,3 +33,4 @@ apps/api/prisma/migrations/dev.db
 firebase-admin-key.json
 *.pem
 *.key
+.neon
