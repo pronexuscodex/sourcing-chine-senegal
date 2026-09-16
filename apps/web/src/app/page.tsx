@@ -42,7 +42,7 @@ export default function HomePage() {
       </p>
       <Link
         href={ctaHref}
-        className="flex w-full items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-3 font-medium text-white hover:bg-gray-800"
+        className="flex w-full items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-3 font-medium text-white shadow-card transition-colors hover:bg-gray-800 hover:shadow-card-hover"
       >
         <ShoppingBag className="h-5 w-5" strokeWidth={2} />
         Je veux acheter un produit

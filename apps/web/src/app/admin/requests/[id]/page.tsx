@@ -90,7 +90,7 @@ export default function AdminRequestDetailPage() {
 
       <ul className="flex flex-col gap-3">
         {request.items.map((item) => (
-          <li key={item.id} className="rounded-lg border border-gray-200 p-4">
+          <li key={item.id} className="rounded-xl border border-gray-200 bg-white shadow-card p-4">
             <p className="font-medium">{item.description ?? 'Produit sans description'}</p>
             {item.productLink && (
               <a href={item.productLink} target="_blank" rel="noreferrer" className="text-sm text-blue-600 underline">
@@ -124,7 +124,7 @@ export default function AdminRequestDetailPage() {
         {canQuote && (
           <Link
             href={`/admin/requests/${request.id}/quote/new`}
-            className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-3 font-medium text-white hover:bg-gray-800"
+            className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-3 font-medium text-white shadow-card transition-colors hover:bg-gray-800 hover:shadow-card-hover"
           >
             <FilePlus className="h-4 w-4" strokeWidth={2.25} />
             Créer un devis
@@ -139,7 +139,7 @@ export default function AdminRequestDetailPage() {
                 transition.mutate(status);
               }}
               disabled={transition.isPending}
-              className="flex items-center justify-center gap-2 rounded-lg border border-gray-300 px-6 py-3 font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+              className="flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-6 py-3 font-medium text-gray-700 shadow-card transition-colors hover:bg-gray-50 hover:shadow-card-hover disabled:opacity-50"
             >
               {transition.isPending && transition.variables === status ? (
                 <LoaderCircle className="h-4 w-4 animate-spin" strokeWidth={2.25} />

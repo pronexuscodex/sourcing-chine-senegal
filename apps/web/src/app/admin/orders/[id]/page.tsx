@@ -10,6 +10,7 @@ import { useAuth } from '../../../../lib/auth-context';
 import { api, ApiError } from '../../../../lib/api-client';
 import { OrderStatusBadge, orderStatusLabel, PackageStatusBadge, DeliveryStatusBadge } from '../../../../components/status-badge';
 import { Spinner } from '../../../../components/spinner';
+import { Select } from '../../../../components/select';
 import { formatAmount, formatDate } from '../../../../lib/format';
 
 interface AddressView {
@@ -140,13 +141,13 @@ export default function AdminOrderDetailPage() {
       </div>
 
       {pkg && (
-        <Link href={`/admin/warehouse/${pkg.id}`} className="flex items-center gap-2 rounded-lg border border-gray-200 p-3 text-sm hover:border-gray-300">
+        <Link href={`/admin/warehouse/${pkg.id}`} className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white shadow-card p-3 text-sm transition-shadow hover:border-gray-300 hover:shadow-card-hover">
           <Boxes className="h-4 w-4 text-gray-400" strokeWidth={2} />
           Colis {pkg.code} <PackageStatusBadge status={pkg.status} />
         </Link>
       )}
       {delivery && (
-        <Link href={`/admin/deliveries/${delivery.id}`} className="flex items-center gap-2 rounded-lg border border-gray-200 p-3 text-sm hover:border-gray-300">
+        <Link href={`/admin/deliveries/${delivery.id}`} className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white shadow-card p-3 text-sm transition-shadow hover:border-gray-300 hover:shadow-card-hover">
           <Truck className="h-4 w-4 text-gray-400" strokeWidth={2} />
           Livraison <DeliveryStatusBadge status={delivery.status} />
         </Link>
@@ -166,7 +167,7 @@ export default function AdminOrderDetailPage() {
             receivePackage.mutate();
           }}
           disabled={receivePackage.isPending}
-          className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-3 font-medium text-white hover:bg-gray-800 disabled:opacity-50"
+          className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-3 font-medium text-white shadow-card transition-colors hover:bg-gray-800 hover:shadow-card-hover disabled:opacity-50"
         >
           {receivePackage.isPending ? <LoaderCircle className="h-4 w-4 animate-spin" strokeWidth={2.25} /> : <Boxes className="h-4 w-4" strokeWidth={2.25} />}
           Recevoir un colis en entrepôt
@@ -174,16 +175,16 @@ export default function AdminOrderDetailPage() {
       )}
 
       {canWarehouseWrite && order.status === 'READY_FOR_DELIVERY' && !delivery && (
-        <div className="rounded-lg border border-gray-200 p-4">
+        <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-card">
           <h2 className="text-sm font-medium text-gray-700">Créer la livraison</h2>
           {order.customer.addresses.length === 0 ? (
             <p className="mt-2 text-sm text-gray-500">Le client n&apos;a pas encore enregistré d&apos;adresse.</p>
           ) : (
             <div className="mt-3 flex gap-3">
-              <select
+              <Select
                 value={selectedAddressId}
                 onChange={(e) => setSelectedAddressId(e.target.value)}
-                className="flex-1 rounded-lg border border-gray-300 px-3 py-2 focus:border-gray-900 focus:outline-none"
+                wrapperClassName="flex-1"
               >
                 <option value="">Choisir une adresse…</option>
                 {order.customer.addresses.map((address) => (
@@ -192,14 +193,14 @@ export default function AdminOrderDetailPage() {
                     {address.line1}, {address.city}
                   </option>
                 ))}
-              </select>
+              </Select>
               <button
                 onClick={() => {
                   setError(null);
                   if (selectedAddressId) createDelivery.mutate(selectedAddressId);
                 }}
                 disabled={!selectedAddressId || createDelivery.isPending}
-                className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-2 font-medium text-white hover:bg-gray-800 disabled:opacity-50"
+                className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-2 font-medium text-white shadow-card transition-colors hover:bg-gray-800 hover:shadow-card-hover disabled:opacity-50"
               >
                 {createDelivery.isPending ? <LoaderCircle className="h-4 w-4 animate-spin" strokeWidth={2.25} /> : <Truck className="h-4 w-4" strokeWidth={2.25} />}
                 Créer
@@ -221,7 +222,7 @@ export default function AdminOrderDetailPage() {
               disabled={transition.isPending}
               className={`flex items-center justify-center gap-2 rounded-lg px-6 py-3 font-medium disabled:opacity-50 ${
                 status === 'CANCELLED' || status === 'DISPUTED'
-                  ? 'border border-red-300 text-red-700 hover:bg-red-50'
+                  ? 'border border-red-300 bg-white text-red-700 shadow-card transition-colors hover:bg-red-50 hover:shadow-card-hover'
                   : 'bg-gray-900 text-white hover:bg-gray-800'
               }`}
             >

@@ -10,6 +10,7 @@ import { useAuth } from '../../../../lib/auth-context';
 import { api, ApiError } from '../../../../lib/api-client';
 import { PackageStatusBadge } from '../../../../components/status-badge';
 import { Spinner } from '../../../../components/spinner';
+import { Select } from '../../../../components/select';
 import { formatDate } from '../../../../lib/format';
 
 interface InspectionView {
@@ -121,7 +122,7 @@ export default function AdminPackageDetailPage() {
         {pkg.inspections.length === 0 && <p className="mt-2 text-sm text-gray-500">Aucune inspection enregistrée.</p>}
         <ul className="mt-3 flex flex-col gap-3">
           {pkg.inspections.map((inspection) => (
-            <li key={inspection.id} className="rounded-lg border border-gray-200 p-4 text-sm">
+            <li key={inspection.id} className="rounded-xl border border-gray-200 bg-white shadow-card p-4 text-sm">
               <p className="text-gray-400">{formatDate(inspection.createdAt)}</p>
               <div className="mt-1 flex flex-wrap gap-3">
                 <span className={`flex items-center gap-1 ${inspection.quantityVerified ? 'text-emerald-700' : 'text-gray-400'}`}>
@@ -146,7 +147,7 @@ export default function AdminPackageDetailPage() {
       </div>
 
       {canInspect && pkg.status === 'RECEIVED' && (
-        <div className="rounded-lg border border-gray-200 p-4">
+        <div className="rounded-xl border border-gray-200 bg-white shadow-card p-4">
           <h2 className="text-sm font-medium text-gray-700">Ajouter une inspection</h2>
           <div className="mt-3 flex flex-col gap-2 text-sm">
             <label className="flex items-center gap-2">
@@ -166,7 +167,7 @@ export default function AdminPackageDetailPage() {
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Notes (optionnel)"
               rows={2}
-              className="mt-1 w-full rounded-lg border border-gray-300 p-2 focus:border-gray-900 focus:outline-none"
+              className="mt-1 w-full rounded-lg border border-gray-300 bg-white p-2 shadow-card transition-colors focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10"
             />
           </div>
           <button
@@ -175,7 +176,7 @@ export default function AdminPackageDetailPage() {
               inspect.mutate({ quantityVerified, variantVerified, issueReported, notes: notes || undefined, mediaDocumentIds: [] });
             }}
             disabled={inspect.isPending}
-            className="mt-3 flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-3 font-medium text-white hover:bg-gray-800 disabled:opacity-50"
+            className="mt-3 flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-3 font-medium text-white shadow-card transition-colors hover:bg-gray-800 hover:shadow-card-hover disabled:opacity-50"
           >
             {inspect.isPending ? <LoaderCircle className="h-4 w-4 animate-spin" strokeWidth={2.25} /> : <CheckCircle2 className="h-4 w-4" strokeWidth={2.25} />}
             Enregistrer l&apos;inspection
@@ -184,13 +185,13 @@ export default function AdminPackageDetailPage() {
       )}
 
       {canAttach && pkg.status === 'INSPECTED' && !pkg.shipment && (
-        <div className="rounded-lg border border-gray-200 p-4">
+        <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-card">
           <h2 className="text-sm font-medium text-gray-700">Rattacher à une expédition</h2>
           <div className="mt-3 flex gap-3">
-            <select
+            <Select
               value={selectedShipmentId}
               onChange={(e) => setSelectedShipmentId(e.target.value)}
-              className="flex-1 rounded-lg border border-gray-300 px-3 py-2 focus:border-gray-900 focus:outline-none"
+              wrapperClassName="flex-1"
             >
               <option value="">Choisir une expédition…</option>
               {shipments?.map((s) => (
@@ -198,14 +199,14 @@ export default function AdminPackageDetailPage() {
                   {s.code}
                 </option>
               ))}
-            </select>
+            </Select>
             <button
               onClick={() => {
                 setError(null);
                 if (selectedShipmentId) attach.mutate(selectedShipmentId);
               }}
               disabled={!selectedShipmentId || attach.isPending}
-              className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-2 font-medium text-white hover:bg-gray-800 disabled:opacity-50"
+              className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-2 font-medium text-white shadow-card transition-colors hover:bg-gray-800 hover:shadow-card-hover disabled:opacity-50"
             >
               {attach.isPending ? <LoaderCircle className="h-4 w-4 animate-spin" strokeWidth={2.25} /> : <Ship className="h-4 w-4" strokeWidth={2.25} />}
               Rattacher

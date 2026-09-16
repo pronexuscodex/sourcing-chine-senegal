@@ -30,7 +30,7 @@ export default function AdminOverviewPage() {
           <Link
             key={href}
             href={href}
-            className="group flex items-start gap-3 rounded-lg border border-gray-200 p-4 hover:bg-gray-50"
+            className="group flex items-start gap-3 rounded-xl border border-gray-200 bg-white p-4 shadow-card transition-shadow hover:bg-gray-50 hover:shadow-card-hover"
           >
             <Icon className="h-5 w-5 shrink-0 text-gray-700" strokeWidth={2} />
             <div>

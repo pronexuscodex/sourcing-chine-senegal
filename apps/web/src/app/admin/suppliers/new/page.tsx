@@ -9,6 +9,7 @@ import { createSupplierSchema, type CreateSupplierInput } from '@sourcing/shared
 import { AlertCircle, ArrowLeft, Factory, LoaderCircle } from 'lucide-react';
 import { useAuth } from '../../../../lib/auth-context';
 import { api, ApiError } from '../../../../lib/api-client';
+import { Select } from '../../../../components/select';
 
 export default function NewSupplierPage() {
   const router = useRouter();
@@ -48,34 +49,34 @@ export default function NewSupplierPage() {
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <div>
           <label className="block text-sm font-medium">Nom</label>
-          <input {...register('name')} className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-gray-900 focus:outline-none" />
+          <input {...register('name')} className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 shadow-card transition-colors focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10" />
           {errors.name && <p className="mt-1 text-xs text-red-600">{errors.name.message}</p>}
         </div>
 
         <div>
           <label className="block text-sm font-medium">Contact</label>
-          <input {...register('contact')} placeholder="Nom, WeChat, email…" className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-gray-900 focus:outline-none" />
+          <input {...register('contact')} placeholder="Nom, WeChat, email…" className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 shadow-card transition-colors focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10" />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="block text-sm font-medium">Plateforme</label>
-            <select {...register('platform')} className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-gray-900 focus:outline-none">
+            <Select {...register('platform')} className="mt-1">
               <option value="">—</option>
               <option value="ALIBABA">Alibaba</option>
               <option value="1688">1688</option>
               <option value="OTHER">Autre</option>
-            </select>
+            </Select>
           </div>
           <div>
             <label className="block text-sm font-medium">MOQ</label>
-            <input type="number" {...register('moq', { valueAsNumber: true })} className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-gray-900 focus:outline-none" />
+            <input type="number" {...register('moq', { valueAsNumber: true })} className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 shadow-card transition-colors focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10" />
           </div>
         </div>
 
         <div>
           <label className="block text-sm font-medium">Notes</label>
-          <textarea {...register('notes')} rows={3} className="mt-1 w-full rounded-lg border border-gray-300 p-2 focus:border-gray-900 focus:outline-none" />
+          <textarea {...register('notes')} rows={3} className="mt-1 w-full rounded-lg border border-gray-300 bg-white p-2 shadow-card transition-colors focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10" />
         </div>
 
         {serverError && (
@@ -88,7 +89,7 @@ export default function NewSupplierPage() {
         <button
           type="submit"
           disabled={isSubmitting || create.isPending}
-          className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-3 font-medium text-white hover:bg-gray-800 disabled:opacity-50"
+          className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-3 font-medium text-white shadow-card transition-colors hover:bg-gray-800 hover:shadow-card-hover disabled:opacity-50"
         >
           {create.isPending ? <LoaderCircle className="h-4 w-4 animate-spin" strokeWidth={2.25} /> : <Factory className="h-4 w-4" strokeWidth={2.25} />}
           Créer le fournisseur

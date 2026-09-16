@@ -86,7 +86,7 @@ export default function AdminSupplierDetailPage() {
         <ScoreBadge score={supplier.computedScore} />
       </div>
 
-      <div className="rounded-lg border border-gray-200 p-4 text-sm text-gray-600">
+      <div className="rounded-xl border border-gray-200 bg-white shadow-card p-4 text-sm text-gray-600">
         <p>{supplier.platform ?? 'Plateforme non précisée'}{supplier.moq ? ` — MOQ ${supplier.moq}` : ''}</p>
         {supplier.contact && <p className="mt-1">Contact : {supplier.contact}</p>}
         {supplier.notes && <p className="mt-2">{supplier.notes}</p>}
@@ -104,7 +104,7 @@ export default function AdminSupplierDetailPage() {
         {supplier.evaluations.length === 0 && <p className="mt-2 text-sm text-gray-500">Aucune évaluation enregistrée.</p>}
         <ul className="mt-3 flex flex-col gap-3">
           {supplier.evaluations.map((evaluation) => (
-            <li key={evaluation.id} className="rounded-lg border border-gray-200 p-4 text-sm">
+            <li key={evaluation.id} className="rounded-xl border border-gray-200 bg-white shadow-card p-4 text-sm">
               <div className="flex items-center justify-between">
                 <span className="text-gray-400">{formatDate(evaluation.createdAt)}</span>
                 <ScoreBadge score={evaluation.computedScore} />
@@ -122,7 +122,7 @@ export default function AdminSupplierDetailPage() {
       </div>
 
       {canWrite && (
-        <div className="rounded-lg border border-gray-200 p-4">
+        <div className="rounded-xl border border-gray-200 bg-white shadow-card p-4">
           <h2 className="flex items-center gap-1.5 text-sm font-medium text-gray-700">
             <Star className="h-4 w-4" strokeWidth={2} />
             Ajouter une évaluation
@@ -137,7 +137,7 @@ export default function AdminSupplierDetailPage() {
                 step={0.5}
                 value={form.priceScore}
                 onChange={(e) => setForm({ ...form, priceScore: Number(e.target.value) })}
-                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-gray-900 focus:outline-none"
+                className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 shadow-card transition-colors focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10"
               />
             </div>
             <div>
@@ -149,7 +149,7 @@ export default function AdminSupplierDetailPage() {
                 step={0.5}
                 value={form.qualityScore}
                 onChange={(e) => setForm({ ...form, qualityScore: Number(e.target.value) })}
-                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-gray-900 focus:outline-none"
+                className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 shadow-card transition-colors focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10"
               />
             </div>
             <div>
@@ -161,7 +161,7 @@ export default function AdminSupplierDetailPage() {
                 step={0.5}
                 value={form.delayScore}
                 onChange={(e) => setForm({ ...form, delayScore: Number(e.target.value) })}
-                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-gray-900 focus:outline-none"
+                className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 shadow-card transition-colors focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10"
               />
             </div>
             <div>
@@ -173,7 +173,7 @@ export default function AdminSupplierDetailPage() {
                 step={0.5}
                 value={form.reactivityScore}
                 onChange={(e) => setForm({ ...form, reactivityScore: Number(e.target.value) })}
-                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-gray-900 focus:outline-none"
+                className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 shadow-card transition-colors focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10"
               />
             </div>
             <div className="col-span-2">
@@ -185,7 +185,7 @@ export default function AdminSupplierDetailPage() {
                 step={5}
                 value={Math.round(form.issueRate * 100)}
                 onChange={(e) => setForm({ ...form, issueRate: Number(e.target.value) / 100 })}
-                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-gray-900 focus:outline-none"
+                className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 shadow-card transition-colors focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10"
               />
             </div>
           </div>
@@ -195,7 +195,7 @@ export default function AdminSupplierDetailPage() {
               addEvaluation.mutate(form);
             }}
             disabled={addEvaluation.isPending}
-            className="mt-3 flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-3 font-medium text-white hover:bg-gray-800 disabled:opacity-50"
+            className="mt-3 flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-3 font-medium text-white shadow-card transition-colors hover:bg-gray-800 hover:shadow-card-hover disabled:opacity-50"
           >
             {addEvaluation.isPending ? <LoaderCircle className="h-4 w-4 animate-spin" strokeWidth={2.25} /> : <Star className="h-4 w-4" strokeWidth={2.25} />}
             Enregistrer l&apos;évaluation

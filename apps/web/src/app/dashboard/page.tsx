@@ -39,7 +39,7 @@ export default function DashboardOverviewPage() {
 
       <Link
         href="/dashboard/requests/new"
-        className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-4 text-center font-medium text-white hover:bg-gray-800"
+        className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-4 text-center font-medium text-white shadow-card transition-colors hover:bg-gray-800 hover:shadow-card-hover"
       >
         <ShoppingBag className="h-5 w-5" strokeWidth={2} />
         Je veux acheter un produit
@@ -50,7 +50,7 @@ export default function DashboardOverviewPage() {
           <Link
             key={label}
             href={href}
-            className="group flex items-start gap-3 rounded-lg border border-gray-200 p-4 hover:bg-gray-50"
+            className="group flex items-start gap-3 rounded-xl border border-gray-200 bg-white p-4 shadow-card transition-shadow hover:bg-gray-50 hover:shadow-card-hover"
           >
             <Icon className="h-5 w-5 shrink-0 text-gray-700" strokeWidth={2} />
             <div>
@@ -64,7 +64,7 @@ export default function DashboardOverviewPage() {
         ))}
 
         {COMING_SOON_CARDS.map(({ label, description, icon: Icon }) => (
-          <div key={label} className="flex items-start gap-3 rounded-lg border border-gray-200 p-4 text-gray-400">
+          <div key={label} className="flex items-start gap-3 rounded-xl border border-gray-200 bg-white shadow-card p-4 text-gray-400">
             <Icon className="h-5 w-5 shrink-0" strokeWidth={2} />
             <div>
               <div className="font-medium">{label}</div>

@@ -86,7 +86,7 @@ export default function QuoteDetailPage() {
 
       <ul className="flex flex-col gap-3">
         {quote.items.map((item) => (
-          <li key={item.id} className="rounded-lg border border-gray-200 p-4">
+          <li key={item.id} className="rounded-xl border border-gray-200 bg-white shadow-card p-4">
             <p className="font-medium">{item.requestItem.description ?? 'Produit sans description'}</p>
             <p className="mt-1 text-sm text-gray-500">
               Quantité {item.requestItem.quantity}
@@ -118,7 +118,7 @@ export default function QuoteDetailPage() {
               respond.mutate('accept');
             }}
             disabled={respond.isPending}
-            className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-3 font-medium text-white hover:bg-gray-800 disabled:opacity-50"
+            className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-3 font-medium text-white shadow-card transition-colors hover:bg-gray-800 hover:shadow-card-hover disabled:opacity-50"
           >
             {respond.isPending && respond.variables === 'accept' ? (
               <LoaderCircle className="h-4 w-4 animate-spin" strokeWidth={2.25} />
@@ -133,7 +133,7 @@ export default function QuoteDetailPage() {
               respond.mutate('reject');
             }}
             disabled={respond.isPending}
-            className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-gray-300 px-6 py-3 font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+            className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-6 py-3 font-medium text-gray-700 shadow-card transition-colors hover:bg-gray-50 hover:shadow-card-hover disabled:opacity-50"
           >
             {respond.isPending && respond.variables === 'reject' ? (
               <LoaderCircle className="h-4 w-4 animate-spin" strokeWidth={2.25} />

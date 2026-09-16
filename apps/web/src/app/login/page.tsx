@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { AlertCircle, AtSign, Lock, LoaderCircle, LogIn } from 'lucide-react';
 import { useAuth } from '../../lib/auth-context';
 import { FieldError, FieldIcon, inputClasses } from '../../components/form-field';
+import { Logo } from '../../components/logo';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -32,7 +33,9 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center gap-6 p-6">
+    <main className="flex min-h-screen flex-col items-center justify-center gap-6 p-6">
+      <Logo className="h-9 w-9" />
+      <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-8 shadow-card">
       <div>
         <h1 className="flex items-center gap-2 text-2xl font-semibold">
           <LogIn className="h-6 w-6 text-gray-700" strokeWidth={2} />
@@ -40,13 +43,13 @@ export default function LoginPage() {
         </h1>
         <p className="mt-1 text-sm text-gray-600">
           Pas encore de compte ?{' '}
-          <Link href="/register" className="underline">
+          <Link href="/register" className="font-medium text-gray-900 underline underline-offset-2">
             Créer un compte
           </Link>
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="mt-6 flex flex-col gap-4">
         <div>
           <label className="block text-sm font-medium">Email ou téléphone</label>
           <div className="relative">
@@ -75,7 +78,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-3 font-medium text-white hover:bg-gray-800 disabled:opacity-50"
+          className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-3 font-medium text-white shadow-card transition-colors hover:bg-gray-800 hover:shadow-card-hover disabled:opacity-50"
         >
           {isSubmitting ? (
             <LoaderCircle className="h-4 w-4 animate-spin" strokeWidth={2.25} />
@@ -85,6 +88,7 @@ export default function LoginPage() {
           {isSubmitting ? 'Connexion…' : 'Se connecter'}
         </button>
       </form>
+      </div>
     </main>
   );
 }

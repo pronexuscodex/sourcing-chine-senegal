@@ -56,7 +56,7 @@ export default function MockCheckoutPage() {
         Page de paiement simulée — développement uniquement, aucun prestataire réel n&apos;est appelé.
       </div>
 
-      <div className="rounded-lg border border-gray-200 p-6 text-center">
+      <div className="rounded-xl border border-gray-200 bg-white shadow-card p-6 text-center">
         <CreditCard className="mx-auto h-8 w-8 text-gray-400" strokeWidth={1.75} />
         <p className="mt-3 text-sm text-gray-500">Montant à payer</p>
         <p className="text-2xl font-semibold">{formatAmount(amount, currency)}</p>
@@ -77,7 +77,7 @@ export default function MockCheckoutPage() {
             simulate.mutate('SUCCEEDED');
           }}
           disabled={simulate.isPending}
-          className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-3 font-medium text-white hover:bg-gray-800 disabled:opacity-50"
+          className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-3 font-medium text-white shadow-card transition-colors hover:bg-gray-800 hover:shadow-card-hover disabled:opacity-50"
         >
           {simulate.isPending && simulate.variables === 'SUCCEEDED' ? (
             <LoaderCircle className="h-4 w-4 animate-spin" strokeWidth={2.25} />
@@ -92,7 +92,7 @@ export default function MockCheckoutPage() {
             simulate.mutate('FAILED');
           }}
           disabled={simulate.isPending}
-          className="flex items-center justify-center gap-2 rounded-lg border border-gray-300 px-6 py-3 font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+          className="flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-6 py-3 font-medium text-gray-700 shadow-card transition-colors hover:bg-gray-50 hover:shadow-card-hover disabled:opacity-50"
         >
           {simulate.isPending && simulate.variables === 'FAILED' ? (
             <LoaderCircle className="h-4 w-4 animate-spin" strokeWidth={2.25} />

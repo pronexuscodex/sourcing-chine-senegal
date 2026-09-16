@@ -101,7 +101,7 @@ export default function OrderDetailPage() {
             pay.mutate();
           }}
           disabled={pay.isPending}
-          className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-3 font-medium text-white hover:bg-gray-800 disabled:opacity-50"
+          className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-3 font-medium text-white shadow-card transition-colors hover:bg-gray-800 hover:shadow-card-hover disabled:opacity-50"
         >
           {pay.isPending ? (
             <LoaderCircle className="h-4 w-4 animate-spin" strokeWidth={2.25} />

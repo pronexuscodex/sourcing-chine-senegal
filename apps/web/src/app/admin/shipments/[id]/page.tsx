@@ -9,6 +9,7 @@ import { AlertCircle, ArrowLeft, LoaderCircle, Plus } from 'lucide-react';
 import { useAuth } from '../../../../lib/auth-context';
 import { api, ApiError } from '../../../../lib/api-client';
 import { Spinner } from '../../../../components/spinner';
+import { Select } from '../../../../components/select';
 import { formatDate } from '../../../../lib/format';
 
 const EVENT_TYPES = [
@@ -121,24 +122,20 @@ export default function AdminShipmentDetailPage() {
         </ul>
 
         {canWrite && (
-          <div className="mt-4 flex flex-col gap-2 rounded-lg border border-gray-200 p-4">
+          <div className="mt-4 flex flex-col gap-2 rounded-xl border border-gray-200 bg-white p-4 shadow-card">
             <div className="grid grid-cols-2 gap-3">
-              <select
-                value={type}
-                onChange={(e) => setType(e.target.value)}
-                className="rounded-lg border border-gray-300 px-3 py-2 focus:border-gray-900 focus:outline-none"
-              >
+              <Select value={type} onChange={(e) => setType(e.target.value)}>
                 {EVENT_TYPES.map((t) => (
                   <option key={t.value} value={t.value}>
                     {t.label}
                   </option>
                 ))}
-              </select>
+              </Select>
               <input
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Description"
-                className="rounded-lg border border-gray-300 px-3 py-2 focus:border-gray-900 focus:outline-none"
+                className="rounded-lg border border-gray-300 bg-white px-3 py-2 shadow-card transition-colors focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10"
               />
             </div>
             <button
@@ -147,7 +144,7 @@ export default function AdminShipmentDetailPage() {
                 if (description.trim()) addEvent.mutate({ type, description });
               }}
               disabled={!description.trim() || addEvent.isPending}
-              className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-2 font-medium text-white hover:bg-gray-800 disabled:opacity-50"
+              className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-2 font-medium text-white shadow-card transition-colors hover:bg-gray-800 hover:shadow-card-hover disabled:opacity-50"
             >
               {addEvent.isPending ? <LoaderCircle className="h-4 w-4 animate-spin" strokeWidth={2.25} /> : <Plus className="h-4 w-4" strokeWidth={2.25} />}
               Ajouter l&apos;événement

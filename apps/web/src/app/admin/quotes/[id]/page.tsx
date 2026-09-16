@@ -88,7 +88,7 @@ export default function AdminQuoteDetailPage() {
 
       <div className="flex flex-col gap-3 overflow-x-auto">
         {quote.items.map((item) => (
-          <div key={item.id} className="rounded-lg border border-gray-200 p-4">
+          <div key={item.id} className="rounded-xl border border-gray-200 bg-white shadow-card p-4">
             <p className="font-medium">
               {item.requestItem.description ?? 'Produit sans description'} — quantité {item.requestItem.quantity}
             </p>
@@ -156,7 +156,7 @@ export default function AdminQuoteDetailPage() {
             send.mutate();
           }}
           disabled={send.isPending}
-          className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-3 font-medium text-white hover:bg-gray-800 disabled:opacity-50"
+          className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-3 font-medium text-white shadow-card transition-colors hover:bg-gray-800 hover:shadow-card-hover disabled:opacity-50"
         >
           {send.isPending ? (
             <LoaderCircle className="h-4 w-4 animate-spin" strokeWidth={2.25} />

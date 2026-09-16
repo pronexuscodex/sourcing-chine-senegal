@@ -34,7 +34,7 @@ export default function AdminSuppliersListPage() {
         {canCreate && (
           <Link
             href="/admin/suppliers/new"
-            className="flex items-center gap-1.5 rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
+            className="flex items-center gap-1.5 rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white shadow-card transition-colors hover:bg-gray-800 hover:shadow-card-hover"
           >
             <Plus className="h-4 w-4" strokeWidth={2.25} />
             Nouveau fournisseur
@@ -60,7 +60,7 @@ export default function AdminSuppliersListPage() {
           <li key={supplier.id}>
             <Link
               href={`/admin/suppliers/${supplier.id}`}
-              className="group flex items-center justify-between rounded-lg border border-gray-200 p-4 hover:border-gray-300"
+              className="group flex items-center justify-between rounded-xl border border-gray-200 bg-white shadow-card p-4 transition-shadow hover:border-gray-300 hover:shadow-card-hover"
             >
               <div>
                 <div className="flex items-center gap-2">

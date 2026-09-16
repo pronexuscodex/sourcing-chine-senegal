@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
+
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans', display: 'swap' });
 
 const SITE_NAME = 'SinoSen';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sinosen-web.onrender.com';
@@ -46,8 +49,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr">
-      <body className="min-h-screen bg-white text-gray-900 antialiased">
+    <html lang="fr" className={inter.variable}>
+      <body className="min-h-screen bg-gray-50 font-sans text-gray-900 antialiased">
         <Providers>{children}</Providers>
       </body>
     </html>

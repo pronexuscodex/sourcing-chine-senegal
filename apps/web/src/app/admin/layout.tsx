@@ -64,24 +64,24 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="min-h-screen">
       {noIndexMeta}
-      <header className="border-b border-gray-200">
+      <header className="sticky top-0 z-10 border-b border-gray-200 bg-white/85 backdrop-blur-sm">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
           <span className="flex items-center gap-2 font-semibold">
             <LogoMark className="h-6 w-6" />
             Espace équipe
-            <span className="rounded bg-gray-100 px-1.5 py-0.5 text-xs font-normal text-gray-500">
+            <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-normal text-gray-500">
               {user.roleName}
             </span>
           </span>
           <button
             onClick={() => logout().then(() => router.replace('/admin/login'))}
-            className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900"
+            className="flex items-center gap-1.5 text-sm text-gray-600 transition-colors hover:text-gray-900"
           >
             <LogOut className="h-4 w-4" strokeWidth={2} />
             Se déconnecter
           </button>
         </div>
-        <nav className="mx-auto flex max-w-5xl flex-wrap gap-4 px-4 pb-2">
+        <nav className="mx-auto flex max-w-5xl flex-wrap gap-1 px-4 pb-2">
           {visibleNavItems.map((item) => {
             const Icon = item.icon;
             const active = item.href === '/admin' ? pathname === item.href : pathname.startsWith(item.href);
@@ -89,7 +89,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-1.5 text-sm ${active ? 'font-semibold text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}
+                className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors ${active ? 'bg-gray-900/5 font-semibold text-gray-900' : 'text-gray-500 hover:bg-gray-900/5 hover:text-gray-700'}`}
               >
                 <Icon className="h-4 w-4" strokeWidth={2} />
                 {item.label}

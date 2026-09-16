@@ -41,18 +41,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <div className="min-h-screen">
       {noIndexMeta}
-      <header className="border-b border-gray-200">
+      <header className="sticky top-0 z-10 border-b border-gray-200 bg-white/85 backdrop-blur-sm">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-3">
           <Logo className="h-7 w-7" />
           <button
             onClick={() => logout().then(() => router.replace('/login'))}
-            className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900"
+            className="flex items-center gap-1.5 text-sm text-gray-600 transition-colors hover:text-gray-900"
           >
             <LogOut className="h-4 w-4" strokeWidth={2} />
             Se déconnecter
           </button>
         </div>
-        <nav className="mx-auto flex max-w-3xl gap-4 px-4 pb-2">
+        <nav className="mx-auto flex max-w-3xl gap-1 px-4 pb-2">
           {NAV_ITEMS.map((item) => {
             const Icon = item.icon;
             const active = item.href === '/dashboard' ? pathname === item.href : pathname.startsWith(item.href);
@@ -60,7 +60,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-1.5 text-sm ${active ? 'font-semibold text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}
+                className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors ${active ? 'bg-gray-900/5 font-semibold text-gray-900' : 'text-gray-500 hover:bg-gray-900/5 hover:text-gray-700'}`}
               >
                 <Icon className="h-4 w-4" strokeWidth={2} />
                 {item.label}

@@ -55,7 +55,7 @@ export default function AdminQuotesListPage() {
             <li key={quote.id}>
               <Link
                 href={`/admin/quotes/${quote.id}`}
-                className="group flex items-center justify-between rounded-lg border border-gray-200 p-4 hover:border-gray-300"
+                className="group flex items-center justify-between rounded-xl border border-gray-200 bg-white shadow-card p-4 transition-shadow hover:border-gray-300 hover:shadow-card-hover"
               >
                 <div>
                   <div className="flex items-center gap-2">

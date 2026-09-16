@@ -37,7 +37,7 @@ export default function RequestsListPage() {
         <h1 className="text-2xl font-semibold">Mes demandes</h1>
         <Link
           href="/dashboard/requests/new"
-          className="flex items-center gap-1.5 rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
+          className="flex items-center gap-1.5 rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white shadow-card transition-colors hover:bg-gray-800 hover:shadow-card-hover"
         >
           <Plus className="h-4 w-4" strokeWidth={2.25} />
           Nouvelle demande
@@ -62,7 +62,7 @@ export default function RequestsListPage() {
 
       <ul className="flex flex-col gap-3">
         {requests?.map((req) => (
-          <li key={req.id} className="rounded-lg border border-gray-200 p-4">
+          <li key={req.id} className="rounded-xl border border-gray-200 bg-white shadow-card p-4">
             <div className="flex items-center justify-between">
               <span className="font-medium">{req.code}</span>
               <SourcingRequestStatusBadge status={req.status} />

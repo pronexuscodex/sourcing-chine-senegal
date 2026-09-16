@@ -61,7 +61,7 @@ export default function AdminDeliveryDetailPage() {
         <DeliveryStatusBadge status={delivery.status} />
       </div>
 
-      <div className="rounded-lg border border-gray-200 p-4 text-sm">
+      <div className="rounded-xl border border-gray-200 bg-white shadow-card p-4 text-sm">
         <p className="flex items-center gap-1.5 font-medium">
           <MapPin className="h-3.5 w-3.5 text-gray-400" strokeWidth={2} />
           {delivery.address.label ?? 'Adresse de livraison'}
@@ -96,7 +96,7 @@ export default function AdminDeliveryDetailPage() {
             complete.mutate();
           }}
           disabled={complete.isPending}
-          className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-3 font-medium text-white hover:bg-gray-800 disabled:opacity-50"
+          className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-3 font-medium text-white shadow-card transition-colors hover:bg-gray-800 hover:shadow-card-hover disabled:opacity-50"
         >
           {complete.isPending ? <LoaderCircle className="h-4 w-4 animate-spin" strokeWidth={2.25} /> : <CheckCircle2 className="h-4 w-4" strokeWidth={2.25} />}
           Marquer comme livrée

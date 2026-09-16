@@ -2,7 +2,7 @@ import type { LucideIcon } from 'lucide-react';
 import { AlertCircle } from 'lucide-react';
 
 export const inputClasses =
-  'mt-1 w-full rounded-lg border border-gray-300 py-2 pl-9 pr-3 focus:border-gray-900 focus:outline-none';
+  'mt-1 w-full rounded-lg border border-gray-300 bg-white py-2 pl-9 pr-3 shadow-card transition-colors focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10';
 
 export function FieldIcon({ icon: Icon }: { icon: LucideIcon }) {
   return (

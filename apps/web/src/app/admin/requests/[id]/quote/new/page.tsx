@@ -11,8 +11,10 @@ import { AlertCircle, ArrowLeft, FilePlus, LoaderCircle } from 'lucide-react';
 import { useAuth } from '../../../../../../lib/auth-context';
 import { api, ApiError } from '../../../../../../lib/api-client';
 import { Spinner } from '../../../../../../components/spinner';
+import { Select } from '../../../../../../components/select';
 
-const numberInputClasses = 'mt-1 w-full rounded-lg border border-gray-300 py-2 px-3 focus:border-gray-900 focus:outline-none';
+const numberInputClasses =
+  'mt-1 w-full rounded-lg border border-gray-300 bg-white py-2 px-3 shadow-card transition-colors focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10';
 
 interface RequestItemView {
   id: string;
@@ -167,32 +169,32 @@ export default function NewQuotePage() {
         <div className="grid grid-cols-3 gap-3">
           <div>
             <label className="block text-sm font-medium">Devise</label>
-            <select {...register('currency')} className="mt-1 w-full rounded-lg border border-gray-300 py-2 px-3 focus:border-gray-900 focus:outline-none">
+            <Select {...register('currency')} className="mt-1">
               <option value="XOF">XOF</option>
               <option value="CNY">CNY</option>
               <option value="USD">USD</option>
               <option value="EUR">EUR</option>
-            </select>
+            </Select>
           </div>
           <div>
             <label className="block text-sm font-medium">Taux de change</label>
-            <input type="number" step="0.01" {...register('exchangeRateUsed')} className="mt-1 w-full rounded-lg border border-gray-300 py-2 px-3 focus:border-gray-900 focus:outline-none" />
+            <input type="number" step="0.01" {...register('exchangeRateUsed')} className={numberInputClasses} />
           </div>
           <div>
             <label className="block text-sm font-medium">Valable jusqu&apos;au</label>
-            <input type="date" {...register('validUntilDate')} className="mt-1 w-full rounded-lg border border-gray-300 py-2 px-3 focus:border-gray-900 focus:outline-none" />
+            <input type="date" {...register('validUntilDate')} className={numberInputClasses} />
             {errors.validUntilDate && <p className="mt-1 text-xs text-red-600">{errors.validUntilDate.message}</p>}
           </div>
         </div>
 
         {request.items.map((item, index) => (
-          <fieldset key={item.id} className="rounded-lg border border-gray-200 p-4">
+          <fieldset key={item.id} className="rounded-xl border border-gray-200 bg-white p-4 shadow-card">
             <legend className="px-1 text-sm font-medium">
               {item.description ?? 'Produit sans description'} — quantité {item.quantity}
             </legend>
             <div className="mb-3">
               <label className="block text-xs text-gray-500">Fournisseur</label>
-              <select {...register(`items.${index}.supplierId`)} className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-gray-900 focus:outline-none">
+              <Select {...register(`items.${index}.supplierId`)} className="mt-1">
                 <option value="">Aucun fournisseur choisi</option>
                 {suppliers?.map((supplier) => (
                   <option key={supplier.id} value={supplier.id}>
@@ -200,7 +202,7 @@ export default function NewQuotePage() {
                     {supplier.platform ? ` (${supplier.platform})` : ''}
                   </option>
                 ))}
-              </select>
+              </Select>
             </div>
             <div className="grid grid-cols-3 gap-3">
               <div>
@@ -249,7 +251,7 @@ export default function NewQuotePage() {
         <button
           type="submit"
           disabled={isSubmitting || create.isPending}
-          className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-3 font-medium text-white hover:bg-gray-800 disabled:opacity-50"
+          className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-3 font-medium text-white shadow-card transition-colors hover:bg-gray-800 hover:shadow-card-hover disabled:opacity-50"
         >
           {create.isPending ? (
             <LoaderCircle className="h-4 w-4 animate-spin" strokeWidth={2.25} />
