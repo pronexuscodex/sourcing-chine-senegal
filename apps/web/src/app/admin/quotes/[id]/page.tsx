@@ -25,6 +25,7 @@ interface QuoteItemView {
   margin: number;
   clientPrice: number;
   requestItem: { description: string | null; quantity: number };
+  supplier: { name: string; platform: string | null } | null;
 }
 
 interface QuoteView {
@@ -90,6 +91,9 @@ export default function AdminQuoteDetailPage() {
           <div key={item.id} className="rounded-lg border border-gray-200 p-4">
             <p className="font-medium">
               {item.requestItem.description ?? 'Produit sans description'} — quantité {item.requestItem.quantity}
+            </p>
+            <p className="mt-1 text-sm text-gray-500">
+              Fournisseur : {item.supplier ? `${item.supplier.name}${item.supplier.platform ? ` (${item.supplier.platform})` : ''}` : 'non précisé'}
             </p>
             <table className="mt-3 w-full text-sm">
               <tbody>

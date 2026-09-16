@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Boxes, FileText, LayoutDashboard, ListChecks, LogOut, Package, Ship, Truck } from 'lucide-react';
+import { Boxes, FileText, LayoutDashboard, ListChecks, LogOut, Package, Ship, Truck, Factory } from 'lucide-react';
 import { useAuth } from '../../lib/auth-context';
 import { Spinner } from '../../components/spinner';
 import { LogoMark } from '../../components/logo';
@@ -13,6 +13,7 @@ const NAV_ITEMS = [
   { href: '/admin/requests', label: 'Demandes', icon: ListChecks, permission: 'sourcing-requests:read:all' },
   { href: '/admin/quotes', label: 'Devis', icon: FileText, permission: 'quotes:read' },
   { href: '/admin/orders', label: 'Commandes', icon: Package, permission: 'orders:read:all' },
+  { href: '/admin/suppliers', label: 'Fournisseurs', icon: Factory, permission: 'suppliers:read' },
   { href: '/admin/warehouse', label: 'Colis', icon: Boxes, permission: 'warehouse:read' },
   { href: '/admin/shipments', label: 'Expéditions', icon: Ship, permission: 'warehouse:read' },
   { href: '/admin/deliveries', label: 'Livraisons', icon: Truck, permission: 'warehouse:read' },

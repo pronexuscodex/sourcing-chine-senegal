@@ -1,13 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, Boxes, FileText, ListChecks, Package, Ship, Truck } from 'lucide-react';
+import { ArrowRight, Boxes, Factory, FileText, ListChecks, Package, Ship, Truck } from 'lucide-react';
 import { useAuth } from '../../lib/auth-context';
 
 const CARDS = [
   { label: 'Demandes', description: 'Demandes de sourcing à analyser', icon: ListChecks, href: '/admin/requests', permission: 'sourcing-requests:read:all' },
   { label: 'Devis', description: 'Créer, envoyer et suivre les devis', icon: FileText, href: '/admin/quotes', permission: 'quotes:read' },
   { label: 'Commandes', description: 'Suivi des commandes clients', icon: Package, href: '/admin/orders', permission: 'orders:read:all' },
+  { label: 'Fournisseurs', description: 'Fiches et évaluations des fournisseurs', icon: Factory, href: '/admin/suppliers', permission: 'suppliers:read' },
   { label: 'Colis', description: 'Réception et contrôle qualité en entrepôt', icon: Boxes, href: '/admin/warehouse', permission: 'warehouse:read' },
   { label: 'Expéditions', description: 'Consolidation et suivi du transport', icon: Ship, href: '/admin/shipments', permission: 'warehouse:read' },
   { label: 'Livraisons', description: 'Livraisons finales aux clients', icon: Truck, href: '/admin/deliveries', permission: 'warehouse:read' },

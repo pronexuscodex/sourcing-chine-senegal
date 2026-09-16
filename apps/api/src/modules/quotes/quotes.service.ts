@@ -18,6 +18,7 @@ const QUOTE_INCLUDE = {
       requestItem: {
         select: { description: true, quantity: true, productLink: true, color: true, size: true },
       },
+      supplier: { select: { name: true, platform: true } },
     },
   },
   request: { select: { code: true, destination: true } },

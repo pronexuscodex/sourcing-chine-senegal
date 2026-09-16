@@ -27,8 +27,15 @@ interface SourcingRequestView {
   items: RequestItemView[];
 }
 
+interface SupplierOption {
+  id: string;
+  name: string;
+  platform: string | null;
+}
+
 const quoteItemFormSchema = z.object({
   requestItemId: z.string().uuid(),
+  supplierId: z.string(),
   productCost: z.coerce.number().int().min(0),
   chinaInlandShipping: z.coerce.number().int().min(0),
   supplierFees: z.coerce.number().int().min(0),
@@ -64,6 +71,11 @@ export default function NewQuotePage() {
     queryFn: () => authFetch((token) => api.get<SourcingRequestView>(`/admin/sourcing-requests/${params.id}`, token)),
   });
 
+  const { data: suppliers } = useQuery({
+    queryKey: ['admin', 'suppliers'],
+    queryFn: () => authFetch((token) => api.get<SupplierOption[]>('/admin/suppliers', token)),
+  });
+
   const defaultValues = useMemo<QuoteFormValues | undefined>(() => {
     if (!request) return undefined;
     return {
@@ -72,6 +84,7 @@ export default function NewQuotePage() {
       validUntilDate: defaultValidUntil(),
       items: request.items.map((item) => ({
         requestItemId: item.id,
+        supplierId: '',
         productCost: 0,
         chinaInlandShipping: 0,
         supplierFees: 0,
@@ -108,6 +121,7 @@ export default function NewQuotePage() {
       validUntil: new Date(`${values.validUntilDate}T23:59:59.000Z`).toISOString(),
       items: values.items.map((item) => ({
         requestItemId: item.requestItemId,
+        supplierId: item.supplierId || undefined,
         productCost: item.productCost,
         chinaInlandShipping: item.chinaInlandShipping,
         supplierFees: item.supplierFees,
@@ -176,6 +190,18 @@ export default function NewQuotePage() {
             <legend className="px-1 text-sm font-medium">
               {item.description ?? 'Produit sans description'} — quantité {item.quantity}
             </legend>
+            <div className="mb-3">
+              <label className="block text-xs text-gray-500">Fournisseur</label>
+              <select {...register(`items.${index}.supplierId`)} className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-gray-900 focus:outline-none">
+                <option value="">Aucun fournisseur choisi</option>
+                {suppliers?.map((supplier) => (
+                  <option key={supplier.id} value={supplier.id}>
+                    {supplier.name}
+                    {supplier.platform ? ` (${supplier.platform})` : ''}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div className="grid grid-cols-3 gap-3">
               <div>
                 <label className="block text-xs text-gray-500">Coût produit</label>
