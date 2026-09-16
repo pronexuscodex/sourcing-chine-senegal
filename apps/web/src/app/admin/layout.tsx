@@ -3,9 +3,10 @@
 import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Boxes, FileText, LayoutDashboard, ListChecks, LogOut, Package, ShieldCheck, Ship, Truck } from 'lucide-react';
+import { Boxes, FileText, LayoutDashboard, ListChecks, LogOut, Package, Ship, Truck } from 'lucide-react';
 import { useAuth } from '../../lib/auth-context';
 import { Spinner } from '../../components/spinner';
+import { LogoMark } from '../../components/logo';
 
 const NAV_ITEMS = [
   { href: '/admin', label: 'Aperçu', icon: LayoutDashboard, permission: null as string | null },
@@ -36,11 +37,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (!isLoginPage && !isLoading && !isStaff) router.replace('/admin/login');
   }, [isLoginPage, isLoading, isStaff, router]);
 
-  if (isLoginPage) return <>{children}</>;
+  // Back-office interne — jamais indexé, sur CHAQUE chemin de retour (React
+  // hoiste ce <meta> dans <head> partout où il est rendu).
+  const noIndexMeta = <meta name="robots" content="noindex, nofollow" />;
+
+  if (isLoginPage)
+    return (
+      <>
+        {noIndexMeta}
+        {children}
+      </>
+    );
 
   if (isLoading || !isStaff) {
     return (
       <main className="flex min-h-screen items-center justify-center">
+        {noIndexMeta}
         <Spinner label="Chargement…" />
       </main>
     );
@@ -50,10 +62,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="min-h-screen">
+      {noIndexMeta}
       <header className="border-b border-gray-200">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
           <span className="flex items-center gap-2 font-semibold">
-            <ShieldCheck className="h-5 w-5 text-gray-700" strokeWidth={2} />
+            <LogoMark className="h-6 w-6" />
             Espace équipe
             <span className="rounded bg-gray-100 px-1.5 py-0.5 text-xs font-normal text-gray-500">
               {user.roleName}

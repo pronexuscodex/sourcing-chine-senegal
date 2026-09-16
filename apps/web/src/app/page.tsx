@@ -1,8 +1,31 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, Ship, ShoppingBag } from 'lucide-react';
+import { ArrowRight, ShoppingBag } from 'lucide-react';
 import { useAuth } from '../lib/auth-context';
+import { Logo } from '../components/logo';
+
+// Organization + WebSite JSON-LD (rich results, Sitelinks Search Box) — l'URL
+// du site sera à mettre à jour une fois le domaine final acheté.
+const STRUCTURED_DATA = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      name: 'SinoSen',
+      description:
+        "SinoSen simplifie l'import Chine → Sénégal : devis clair, suivi de commande, livraison à Dakar.",
+      url: 'https://sinosen-web.onrender.com',
+      areaServed: { '@type': 'Country', name: 'Sénégal' },
+    },
+    {
+      '@type': 'WebSite',
+      name: 'SinoSen',
+      url: 'https://sinosen-web.onrender.com',
+      inLanguage: 'fr',
+    },
+  ],
+};
 
 export default function HomePage() {
   const { user, isLoading } = useAuth();
@@ -10,7 +33,8 @@ export default function HomePage() {
 
   return (
     <main className="mx-auto flex min-h-screen max-w-md flex-col items-center justify-center gap-6 p-6 text-center">
-      <Ship className="h-10 w-10 text-gray-700" strokeWidth={1.75} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(STRUCTURED_DATA) }} />
+      <Logo className="h-10 w-10" />
       <h1 className="text-2xl font-semibold">Sourcing Chine → Sénégal</h1>
       <p className="text-gray-600">
         Envoyez un lien, une photo ou une description du produit que vous recherchez. Nous nous
