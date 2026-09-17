@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -102,6 +102,7 @@ export default function NewQuotePage() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<QuoteFormValues>({
     resolver: zodResolver(quoteFormSchema),
@@ -169,12 +170,23 @@ export default function NewQuotePage() {
         <div className="grid grid-cols-3 gap-3">
           <div>
             <label className="block text-sm font-medium">Devise</label>
-            <Select {...register('currency')} className="mt-1">
-              <option value="XOF">XOF</option>
-              <option value="CNY">CNY</option>
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-            </Select>
+            <Controller
+              control={control}
+              name="currency"
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onChange={field.onChange}
+                  wrapperClassName="mt-1"
+                  options={[
+                    { value: 'XOF', label: 'XOF' },
+                    { value: 'CNY', label: 'CNY' },
+                    { value: 'USD', label: 'USD' },
+                    { value: 'EUR', label: 'EUR' },
+                  ]}
+                />
+              )}
+            />
           </div>
           <div>
             <label className="block text-sm font-medium">Taux de change</label>
@@ -194,15 +206,22 @@ export default function NewQuotePage() {
             </legend>
             <div className="mb-3">
               <label className="block text-xs text-gray-500">Fournisseur</label>
-              <Select {...register(`items.${index}.supplierId`)} className="mt-1">
-                <option value="">Aucun fournisseur choisi</option>
-                {suppliers?.map((supplier) => (
-                  <option key={supplier.id} value={supplier.id}>
-                    {supplier.name}
-                    {supplier.platform ? ` (${supplier.platform})` : ''}
-                  </option>
-                ))}
-              </Select>
+              <Controller
+                control={control}
+                name={`items.${index}.supplierId`}
+                render={({ field }) => (
+                  <Select
+                    value={field.value}
+                    onChange={field.onChange}
+                    wrapperClassName="mt-1"
+                    placeholder="Aucun fournisseur choisi"
+                    options={(suppliers ?? []).map((supplier) => ({
+                      value: supplier.id,
+                      label: `${supplier.name}${supplier.platform ? ` (${supplier.platform})` : ''}`,
+                    }))}
+                  />
+                )}
+              />
             </div>
             <div className="grid grid-cols-3 gap-3">
               <div>

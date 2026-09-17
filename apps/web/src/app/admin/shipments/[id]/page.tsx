@@ -124,13 +124,7 @@ export default function AdminShipmentDetailPage() {
         {canWrite && (
           <div className="mt-4 flex flex-col gap-2 rounded-xl border border-gray-200 bg-white p-4 shadow-card">
             <div className="grid grid-cols-2 gap-3">
-              <Select value={type} onChange={(e) => setType(e.target.value)}>
-                {EVENT_TYPES.map((t) => (
-                  <option key={t.value} value={t.value}>
-                    {t.label}
-                  </option>
-                ))}
-              </Select>
+              <Select value={type} onChange={setType} options={EVENT_TYPES.map((t) => ({ value: t.value, label: t.label }))} />
               <input
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}

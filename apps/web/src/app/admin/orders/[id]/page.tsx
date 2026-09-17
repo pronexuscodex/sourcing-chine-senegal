@@ -183,17 +183,14 @@ export default function AdminOrderDetailPage() {
             <div className="mt-3 flex gap-3">
               <Select
                 value={selectedAddressId}
-                onChange={(e) => setSelectedAddressId(e.target.value)}
+                onChange={setSelectedAddressId}
                 wrapperClassName="flex-1"
-              >
-                <option value="">Choisir une adresse…</option>
-                {order.customer.addresses.map((address) => (
-                  <option key={address.id} value={address.id}>
-                    {address.label ? `${address.label} — ` : ''}
-                    {address.line1}, {address.city}
-                  </option>
-                ))}
-              </Select>
+                placeholder="Choisir une adresse…"
+                options={order.customer.addresses.map((address) => ({
+                  value: address.id,
+                  label: `${address.label ? `${address.label} — ` : ''}${address.line1}, ${address.city}`,
+                }))}
+              />
               <button
                 onClick={() => {
                   setError(null);

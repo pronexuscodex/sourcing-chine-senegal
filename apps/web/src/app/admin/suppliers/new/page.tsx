@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { createSupplierSchema, type CreateSupplierInput } from '@sourcing/shared';
@@ -19,6 +19,7 @@ export default function NewSupplierPage() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<CreateSupplierInput>({ resolver: zodResolver(createSupplierSchema) });
 
@@ -61,12 +62,23 @@ export default function NewSupplierPage() {
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="block text-sm font-medium">Plateforme</label>
-            <Select {...register('platform')} className="mt-1">
-              <option value="">—</option>
-              <option value="ALIBABA">Alibaba</option>
-              <option value="1688">1688</option>
-              <option value="OTHER">Autre</option>
-            </Select>
+            <Controller
+              control={control}
+              name="platform"
+              render={({ field }) => (
+                <Select
+                  value={field.value ?? ''}
+                  onChange={field.onChange}
+                  wrapperClassName="mt-1"
+                  placeholder="—"
+                  options={[
+                    { value: 'ALIBABA', label: 'Alibaba' },
+                    { value: '1688', label: '1688' },
+                    { value: 'OTHER', label: 'Autre' },
+                  ]}
+                />
+              )}
+            />
           </div>
           <div>
             <label className="block text-sm font-medium">MOQ</label>

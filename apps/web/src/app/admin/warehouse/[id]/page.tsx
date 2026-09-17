@@ -190,16 +190,11 @@ export default function AdminPackageDetailPage() {
           <div className="mt-3 flex gap-3">
             <Select
               value={selectedShipmentId}
-              onChange={(e) => setSelectedShipmentId(e.target.value)}
+              onChange={setSelectedShipmentId}
               wrapperClassName="flex-1"
-            >
-              <option value="">Choisir une expédition…</option>
-              {shipments?.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.code}
-                </option>
-              ))}
-            </Select>
+              placeholder="Choisir une expédition…"
+              options={(shipments ?? []).map((s) => ({ value: s.id, label: s.code }))}
+            />
             <button
               onClick={() => {
                 setError(null);
